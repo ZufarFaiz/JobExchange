@@ -1,0 +1,45 @@
+spring:
+  # Настройки подключения к PostgreSQL (через Docker)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/job_exchange
+    username: postgres
+    password: mysecretpassword
+    driver-class-name: org.postgresql.Driver
+
+  # Настройки JPA/Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Настройки для загрузки файлов (резюме)
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+# JWT настройки
+app:
+  jwt:
+    secret: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
+    access-token-expiration: 900000      # 15 минут (в миллисекундах)
+    refresh-token-expiration: 604800000  # 7 дней (в миллисекундах)
+
+# Настройки для загрузки файлов
+file:
+  upload-dir: ./uploads
+
+# Логирование (опционально, но полезно)
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+      hibernate:
+        SQL: DEBUG
+    com:
+      jobexchange: DEBUG
