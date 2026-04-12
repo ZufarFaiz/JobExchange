@@ -1,4 +1,4 @@
-package JobExchange.repositroy;
+package JobExchange.repository;
 
 import JobExchange.model.entity.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
