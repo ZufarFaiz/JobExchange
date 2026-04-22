@@ -9,6 +9,7 @@ import JobExchange.model.dto.response.AuthResponse;
 import JobExchange.model.entity.*;
 import JobExchange.model.enums.Role;
 import JobExchange.repository.CompanyRepository;
+import JobExchange.repository.RecruiterRepository;
 import JobExchange.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +21,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
+    private final RecruiterRepository recruiterRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -66,7 +69,7 @@ public class AuthService {
             return companyRepository.save(newCompany);
         });
 
-        User user = new Recruiter();
+        Recruiter user = new Recruiter();
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFirstName(request.getFirstName());
@@ -74,18 +77,16 @@ public class AuthService {
         user.setPhoneNumber(request.getPhoneNumber());
         user.setRole(Role.ROLE_RECRUITER);
         user.setCreatedAt(LocalDateTime.now());
-        userRepository.save(user);
+        user.setCompany(company);
 
-        if(user instanceof Recruiter){
-            ((Recruiter)user).setCompany(company);
-            userRepository.save(user);
-        }
+        recruiterRepository.save(user);
 
         return buildAuthResponse(user);
 
     }
 
-    private AuthResponse login(LoginRequest request){
+    @Transactional
+    public AuthResponse login(LoginRequest request){
         try{
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -105,10 +106,12 @@ public class AuthService {
     }
 
     @Transactional
-    public void logout(Long userId){
+    public Map<String,String> logout(Long userId){
         User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException(userId));
 
         refreshTokenService.revokedAllUserTokens(user);
+
+        return Map.of("message","Logout successfully");
     }
 
     private AuthResponse buildAuthResponse(User user,String accessToken, String refreshToken){

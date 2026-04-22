@@ -1,5 +1,6 @@
 package JobExchange.model.entity;
 
+import JobExchange.model.enums.ResponseStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,28 +10,30 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "responses")
 @Getter
 @Setter
-@Table(name="companies")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Company {
-
+public class Response {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,length = 30)
-    private String title;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vacancy_id", nullable = false)
+    private Vacancy vacancy;
 
-    @Column(nullable = false,length = 255)
-    private String location;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "applicant_id", nullable = false)
+    private Applicant applicant;
 
-    @Column(nullable = false,unique = true,length = 20)
-    private String taxId;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ResponseStatus status = ResponseStatus.PENDING;
 
-    @Column(nullable = false, length = 1000)
-    private String description;
+    @Column(name = "cover_letter", length = 2000)
+    private String coverLetter;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -38,8 +41,8 @@ public class Company {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(nullable = false)
-    private Boolean isVerified = false;
+    @Column(name = "viewed_at")
+    private LocalDateTime viewedAt;
 
     @PrePersist
     protected void onCreate() {
@@ -51,5 +54,4 @@ public class Company {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
 }

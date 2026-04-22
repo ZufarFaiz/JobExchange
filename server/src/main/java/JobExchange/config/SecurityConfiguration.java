@@ -1,6 +1,7 @@
 package JobExchange.config;
 
 import JobExchange.component.JwtAuthenticationFilter;
+import JobExchange.model.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,9 +30,10 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/api/auth/**", "/api/public/**").permitAll()
-                        .requestMatchers("/api/recruiter/**").hasRole("RECRUITER")
-                        .requestMatchers("/api/applicant/**").hasRole("APPLICANT")
+                        .requestMatchers("/api/auth/**", "/api/public/**","/api/vacancies/**").permitAll()
+                        .requestMatchers("/api/recruiter/**").hasRole(Role.ROLE_RECRUITER.name().replace("ROLE_",""))
+                        .requestMatchers("/api/applicant/**").hasRole(Role.ROLE_APPLICANT.name().replace("ROLE_",""))
+                        .requestMatchers("/api/admin/**").hasRole(Role.ROLE_ADMIN.name().replace("ROLE_",""))
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session->session.sessionCreationPolicy(

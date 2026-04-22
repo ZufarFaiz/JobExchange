@@ -19,4 +19,7 @@ public class Recruiter extends User {
     @JoinColumn(name = "company_id",nullable = false)
     private Company company;
 
+    @Column(nullable = false)
+    private Boolean isVerified = false;
+
 }
