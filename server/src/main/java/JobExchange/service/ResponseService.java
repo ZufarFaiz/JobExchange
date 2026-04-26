@@ -16,6 +16,7 @@ import JobExchange.repository.ResponseRepository;
 import JobExchange.repository.VacancyRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,14 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ResponseService {
 
     private final ResponseRepository responseRepository;
     private final VacancyRepository vacancyRepository;
     private final ApplicantRepository applicantRepository;
     private final RecruiterRepository recruiterRepository;
+    private final ChatService chatService;
 
     @Transactional
     public ResponseDto createResponse(ResponseCreateRequest request, Long applicantId) {
@@ -54,6 +57,17 @@ public class ResponseService {
         response.setVacancy(vacancy);
 
         Response saved = responseRepository.save(response);
+
+        try{
+            chatService.createChatForResponse(
+                    saved.getId(),
+                    saved.getApplicant().getEmail(),
+                    saved.getVacancy().getRecruiter().getEmail()
+            );
+        } catch (Exception e) {
+            log.error("Failed to create chat for response: {}", saved.getId(), e);
+        }
+
         return toDto(saved);
     }
 

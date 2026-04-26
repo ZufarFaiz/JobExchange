@@ -1,5 +1,6 @@
 server:
   port: 8080
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5433/job_exchange
@@ -34,7 +35,11 @@ app:
 file:
   upload-dir: ./uploads
 
-# Логирование (опционально, но полезно)
+# Чат-сервис
+chat-service:
+  url: http://localhost:8081
+
+# Логирование
 logging:
   level:
     org:
