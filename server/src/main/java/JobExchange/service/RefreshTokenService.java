@@ -28,10 +28,14 @@ public class RefreshTokenService {
         return refreshTokenRepository.findByToken(token);
     }
 
+    @Transactional
     public RefreshToken createRefreshToken(Long userId){
         User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException(userId));
 
-        refreshTokenRepository.findByUser(user).ifPresent(refreshTokenRepository::delete);
+        refreshTokenRepository.findByUser(user).ifPresent(token -> {
+            refreshTokenRepository.delete(token);
+            refreshTokenRepository.flush();  // ← КЛЮЧЕВОЙ МОМЕНТ!
+        });
 
         RefreshToken refreshToken=RefreshToken.builder()
                 .user(user)

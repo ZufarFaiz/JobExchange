@@ -20,23 +20,7 @@ public interface ResponseRepository extends JpaRepository<Response, Long> {
 
     boolean existsByApplicantAndVacancy(Applicant applicant, Vacancy vacancy);
 
-    List<Response> findByApplicantOrderByCreatedAtDesc(Applicant applicant);
+    long countByApplicantId(Long applicantId);
 
-    Page<Response> findByVacancyOrderByCreatedAtDesc(Vacancy vacancy, Pageable pageable);
-
-    List<Response> findByVacancyAndStatus(Vacancy vacancy, ResponseStatus status);
-
-    @Query("SELECT r FROM Response r WHERE r.vacancy.recruiter.id = :recruiterId")
-    List<Response> findAllByRecruiterId(@Param("recruiterId") Long recruiterId);
-
-    // Подсчитать новые отклики для рекрутера
-    @Query("SELECT COUNT(r) FROM Response r WHERE r.vacancy.recruiter.id = :recruiterId AND r.viewedAt IS NULL")
-    Long countNewResponsesByRecruiterId(@Param("recruiterId") Long recruiterId);
-
-    // Обновить статус отклика
-    @Modifying
-    @Query("UPDATE Response r SET r.status = :status, r.updatedAt = :now WHERE r.id = :responseId")
-    void updateStatus(@Param("responseId") Long responseId,
-                      @Param("status") ResponseStatus status,
-                      @Param("now") LocalDateTime now);
+    Page<Response> findAllByVacancy(Vacancy vacancy,Pageable pageable);
 }

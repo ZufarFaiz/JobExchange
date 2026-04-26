@@ -6,6 +6,7 @@ import JobExchange.service.VacancyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class VacancyController {
     private final VacancyService vacancyService;
 
     @GetMapping
-    public ResponseEntity<Page<ShortVacancyDto>> getAllVacancies(@RequestParam Pageable pageable){
+    public ResponseEntity<Page<ShortVacancyDto>> getAllVacancies(@PageableDefault(size = 10, sort = "createdAt") Pageable pageable){
         return ResponseEntity.ok(vacancyService.getAllVacancies(pageable));
     }
 

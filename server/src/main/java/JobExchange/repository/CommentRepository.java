@@ -18,14 +18,6 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
 
     List<Comment> findByVacancy(Vacancy vacancy);
 
-    // Средний рейтинг вакансии
-    @Query("SELECT AVG(c.rating) FROM Comment c WHERE c.vacancy.id = :vacancyId AND c.isVerified = true")
-    Double getAverageRatingByVacancyId(@Param("vacancyId") Long vacancyId);
-
-    // Количество комментариев у вакансии
-    @Query("SELECT COUNT(c) FROM Comment c WHERE c.vacancy.id = :vacancyId AND c.isVerified = true")
-    Long countVerifiedCommentsByVacancyId(@Param("vacancyId") Long vacancyId);
-
     // Удалить все комментарии соискателя
     @Modifying
     @Query("DELETE FROM Comment c WHERE c.applicant.id = :applicantId")

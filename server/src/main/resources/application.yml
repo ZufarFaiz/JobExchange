@@ -1,7 +1,8 @@
+server:
+  port: 8080
 spring:
-  # Настройки подключения к PostgreSQL (через Docker)
   datasource:
-    url: jdbc:postgresql://localhost:5432/job_exchange
+    url: jdbc:postgresql://localhost:5433/job_exchange
     username: postgres
     password: mysecretpassword
     driver-class-name: org.postgresql.Driver

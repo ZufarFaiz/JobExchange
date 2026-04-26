@@ -4,15 +4,20 @@ import JobExchange.exception.*;
 import JobExchange.model.dto.request.ResponseCreateRequest;
 import JobExchange.model.dto.request.ResponseStatusUpdateRequest;
 import JobExchange.model.dto.response.ResponseDto;
+import JobExchange.model.dto.response.ShortResponseDto;
 import JobExchange.model.entity.Applicant;
+import JobExchange.model.entity.Recruiter;
 import JobExchange.model.entity.Response;
 import JobExchange.model.entity.Vacancy;
 import JobExchange.model.enums.ResponseStatus;
 import JobExchange.repository.ApplicantRepository;
+import JobExchange.repository.RecruiterRepository;
 import JobExchange.repository.ResponseRepository;
 import JobExchange.repository.VacancyRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,6 +29,7 @@ public class ResponseService {
     private final ResponseRepository responseRepository;
     private final VacancyRepository vacancyRepository;
     private final ApplicantRepository applicantRepository;
+    private final RecruiterRepository recruiterRepository;
 
     @Transactional
     public ResponseDto createResponse(ResponseCreateRequest request, Long applicantId) {
@@ -45,6 +51,7 @@ public class ResponseService {
         response.setApplicant(applicant);
         response.setCoverLetter(request.getCoverLetter());
         response.setStatus(ResponseStatus.PENDING);
+        response.setVacancy(vacancy);
 
         Response saved = responseRepository.save(response);
         return toDto(saved);
@@ -56,7 +63,7 @@ public class ResponseService {
                 .orElseThrow(() -> new ResponseNotFoundException(responseId));
 
         if (!response.getVacancy().getRecruiter().getId().equals(recruiterId)) {
-            throw new ResponseAccessDeniedException();
+            throw new ResponseAccessDeniedException("You don't have permission to update this response");
         }
 
         response.setStatus(request.getStatus());
@@ -67,6 +74,42 @@ public class ResponseService {
         }
 
         return toDto(responseRepository.save(response));
+    }
+
+    public ResponseDto getResponse(Long responseId, Long recruiterId){
+        Response response = responseRepository.findById(responseId)
+                .orElseThrow(() -> new ResponseNotFoundException(responseId));
+
+        if (!response.getVacancy().getRecruiter().getId().equals(recruiterId)) {
+            throw new ResponseAccessDeniedException("You don't have permission to see this response");
+        }
+
+        return toDto(response);
+    }
+
+    public Page<ShortResponseDto> getAllResponses(Long recruiterId, Long vacancyId, Pageable pageable){
+        Recruiter recruiter = recruiterRepository.findById(recruiterId)
+                .orElseThrow(() -> new UserNotFoundException(recruiterId));
+
+        Vacancy vacancy = vacancyRepository.findById(vacancyId).orElseThrow(()->new VacancyNotFoundException(vacancyId));
+
+        if (!vacancy.getRecruiter().getId().equals(recruiterId)) {
+            throw new ResponseAccessDeniedException("You don't have permission to see this responses");
+        }
+
+        return responseRepository.findAllByVacancy(vacancy,pageable).map(this::shortResponseDto);
+    }
+
+    private ShortResponseDto shortResponseDto(Response response){
+        return ShortResponseDto.builder()
+                .id(response.getId())
+                .createdAt(response.getCreatedAt())
+                .status(response.getStatus())
+                .vacancyId(response.getVacancy().getId())
+                .vacancyTitle(response.getVacancy().getTitle())
+                .applicantId(response.getApplicant().getId())
+                .applicantName(response.getApplicant().getFirstName() + " " + response.getApplicant().getLastName())
+                .build();
     }
 
     private ResponseDto toDto(Response response) {
