@@ -70,7 +70,7 @@ public class ChatService {
         return toDto(message);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<MessageDto> getMessages(Long chatId, String userEmail) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new RuntimeException("Chat not found"));

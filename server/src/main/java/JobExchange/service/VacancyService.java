@@ -5,6 +5,7 @@ import JobExchange.exception.RecruiterNotVerifiedException;
 import JobExchange.exception.UserNotFoundException;
 import JobExchange.exception.VacancyNotFoundException;
 import JobExchange.model.dto.request.VacancyCreateRequest;
+import JobExchange.model.dto.request.VacancyFilterRequest;
 import JobExchange.model.dto.response.CommentDto;
 import JobExchange.model.dto.response.ShortVacancyDto;
 import JobExchange.model.dto.response.VacancyDto;
@@ -59,6 +60,25 @@ public class VacancyService {
         return vacancyRepository.findAll(pageable)
                 .map(this::toShortVacancyDto);
     }
+
+    public Page<ShortVacancyDto> getAllVacanciesWithFilters(VacancyFilterRequest filters, Pageable pageable) {
+
+        if (filters == null) {
+            filters = new VacancyFilterRequest();
+        }
+
+        return vacancyRepository.findAllWithFilters(
+                filters.getTitle(),
+                filters.getLocation(),
+                filters.getSalaryMin(),
+                filters.getSalaryMax(),
+                filters.getEmploymentType(),
+                filters.getWorkFormat(),
+                filters.getExperienceLevel(),
+                pageable
+        ).map(this::toShortVacancyDto);
+    }
+
 
     public VacancyDto getVacancy(Long vacancyId){
         Vacancy vacancy = vacancyRepository.findById(vacancyId).orElseThrow(()-> new VacancyNotFoundException(vacancyId));
