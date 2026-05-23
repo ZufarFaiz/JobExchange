@@ -13,36 +13,36 @@ export function AppLayout() {
           </Link>
           <nav className="flex items-center gap-3 text-sm">
             <Link to="/vacancies" className="text-slate-700 hover:text-slate-900">
-              Vacancies
+              Вакансии
             </Link>
             {!user && (
               <>
                 <Link to="/login" className="text-slate-700 hover:text-slate-900">
-                  Login
+                  Войти
                 </Link>
                 <Link to="/register" className="text-slate-700 hover:text-slate-900">
-                  Register
+                  Регистрация
                 </Link>
               </>
             )}
             {user?.role === 'ROLE_APPLICANT' && (
               <Link to="/applicant" className="text-slate-700 hover:text-slate-900">
-                Applicant
+                Соискатель
               </Link>
             )}
             {user?.role === 'ROLE_RECRUITER' && (
               <Link to="/recruiter" className="text-slate-700 hover:text-slate-900">
-                Recruiter
+                Рекрутер
               </Link>
             )}
             {(user?.role === 'ROLE_APPLICANT' || user?.role === 'ROLE_RECRUITER') && (
               <Link to="/chats" className="text-slate-700 hover:text-slate-900">
-                Chats
+                Чаты
               </Link>
             )}
             {user?.role === 'ROLE_ADMIN' && (
               <Link to="/admin" className="text-slate-700 hover:text-slate-900">
-                Admin
+                Админ
               </Link>
             )}
             {user && (
@@ -51,7 +51,7 @@ export function AppLayout() {
                 className="rounded bg-slate-900 px-3 py-1.5 text-white"
                 type="button"
               >
-                Logout
+                Выйти
               </button>
             )}
           </nav>

@@ -9,4 +9,5 @@ public class CreateChatRequest {
     private Long responseId;
     private String applicantEmail;
     private String recruiterEmail;
+    private String firstMessage;
 }

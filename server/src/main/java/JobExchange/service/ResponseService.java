@@ -58,11 +58,14 @@ public class ResponseService {
 
         Response saved = responseRepository.save(response);
 
+        String chatMessage = buildChatMessage(saved.getCoverLetter(),applicant.getFirstName(),applicant.getLastName(),vacancy.getTitle());
+
         try{
             chatService.createChatForResponse(
                     saved.getId(),
                     saved.getApplicant().getEmail(),
-                    saved.getVacancy().getRecruiter().getEmail()
+                    saved.getVacancy().getRecruiter().getEmail(),
+                    chatMessage
             );
         } catch (Exception e) {
             log.error("Failed to create chat for response: {}", saved.getId(), e);
@@ -99,6 +102,14 @@ public class ResponseService {
         }
 
         return toDto(response);
+    }
+
+    public Page<ShortResponseDto> getAllResponsesByRecruiter(Long recruiterId, Pageable pageable) {
+        recruiterRepository.findById(recruiterId)
+                .orElseThrow(() -> new UserNotFoundException(recruiterId));
+
+        return responseRepository.findAllByRecruiterId(recruiterId, pageable)
+                .map(this::shortResponseDto);
     }
 
     public Page<ShortResponseDto> getAllResponses(Long recruiterId, Long vacancyId, Pageable pageable){
@@ -145,5 +156,17 @@ public class ResponseService {
                 .applicantEmail(response.getApplicant().getEmail())
                 .applicantResumeUrl(response.getApplicant().getResumeUrl())
                 .build();
+    }
+
+    private String buildChatMessage(String coverLetter,String firstName, String lastName, String vacancyTitle){
+        String fullName = firstName + " " + lastName;
+
+        if(coverLetter != null && !coverLetter.trim().isEmpty()){
+            return fullName + " оставил(а) сопрововодительное письмо к отклику на вакансию \"" + vacancyTitle + "\":\n\n" + coverLetter;
+        }
+        else{
+            return fullName + " откликается на вашу вакансию \"" + vacancyTitle + "\".\n\n" +
+                    "Сопроводительное письмо не указано, но вы можете связаться с соискателем через этот чат.";
+        }
     }
 }

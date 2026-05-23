@@ -26,13 +26,10 @@ export const recruiterApi = {
     const { data } = await http.post<VacancyDto>('/api/recruiter/add-vacancy', payload)
     return data
   },
-  async getResponsesByVacancy(vacancyId: number, page = 0, size = 10) {
-    const { data } = await http.get<PageResponse<ShortResponseDto>>(
-      `/api/recruiter/vacancies/${vacancyId}/responses`,
-      {
-        params: { page, size, sort: 'id,desc' },
-      },
-    )
+  async getResponses(page = 0, size = 10) {
+    const { data } = await http.get<PageResponse<ShortResponseDto>>('/api/recruiter/responses', {
+      params: { page, size, sort: 'id,desc' },
+    })
     return data
   },
   async updateResponseStatus(responseId: number, payload: ResponseStatusUpdateRequest) {

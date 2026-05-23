@@ -7,6 +7,10 @@ import JobExchange.model.entity.Applicant;
 import JobExchange.repository.ApplicantRepository;
 import JobExchange.repository.ResponseRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -96,5 +100,30 @@ public class ApplicantService {
         Applicant savedApplicant = applicantRepository.save(applicant);
 
         return getProfile(savedApplicant.getId());
+    }
+
+    public ResponseEntity<?> getResume(Long applicantId) {
+        Applicant applicant = applicantRepository.findById(applicantId)
+                .orElseThrow(() -> new UserNotFoundException(applicantId));
+
+        String resumeUrl = applicant.getResumeUrl();
+
+        if (resumeUrl == null || resumeUrl.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Resource resource = fileStorageService.getResumeFile(resumeUrl);
+
+        if (resource == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String contentType = fileStorageService.getContentType(resumeUrl);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "inline; filename=\"" + resource.getFilename() + "\"")  // ← исправлено
+                .body(resource);
     }
 }

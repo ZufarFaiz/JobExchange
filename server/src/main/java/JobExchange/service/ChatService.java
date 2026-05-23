@@ -16,12 +16,13 @@ public class ChatService {
 
     @Value("${chat-service.url}")  // ← так работает
     private String chatServiceUrl;
-    public void createChatForResponse(Long responseId, String applicantEmail, String recruiterEmail) {
+    public void createChatForResponse(Long responseId, String applicantEmail, String recruiterEmail, String firstMessage) {
         try {
             CreateChatRequest request = CreateChatRequest.builder()
                     .responseId(responseId)
                     .applicantEmail(applicantEmail)
                     .recruiterEmail(recruiterEmail)
+                    .firstMessage(firstMessage)
                     .build();
 
             String url = chatServiceUrl + "/api/chats";

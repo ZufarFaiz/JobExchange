@@ -52,7 +52,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/admin/**").hasRole(Role.ROLE_ADMIN.name().replace("ROLE_", ""))
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

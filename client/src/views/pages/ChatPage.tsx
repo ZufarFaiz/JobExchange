@@ -21,7 +21,7 @@ export function ChatPage() {
   const userEmail = user?.email ?? ''
 
   const selectedChatTitle = useMemo(() => {
-    if (!selectedChat) return 'Select chat'
+    if (!selectedChat) return 'Выберите чат'
     return selectedChat.otherPartyEmail ?? selectedChat.recruiterEmail ?? selectedChat.applicantEmail
   }, [selectedChat])
 
@@ -39,7 +39,7 @@ export function ChatPage() {
         setSelectedChat((prev) => prev ?? data[0])
       }
     } catch (loadError) {
-      setError(getErrorMessage(loadError, 'Failed to load chats'))
+      setError(getErrorMessage(loadError, 'Не удалось загрузить чаты'))
     } finally {
       setLoading(false)
     }
@@ -52,7 +52,7 @@ export function ChatPage() {
       const data = await ChatPresenter.getMessages(chatId, userEmail)
       setMessages(data)
     } catch (loadError) {
-      setError(getErrorMessage(loadError, 'Failed to load messages'))
+      setError(getErrorMessage(loadError, 'Не удалось загрузить сообщения'))
     }
   }
 
@@ -107,14 +107,14 @@ export function ChatPage() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-2xl font-semibold">Chats</h1>
+      <h1 className="text-2xl font-semibold">Чаты</h1>
       {error && <ErrorBanner message={error} />}
       <div className="grid gap-4 md:grid-cols-[320px_1fr]">
         <aside className="rounded border bg-white">
-          <div className="border-b p-3 text-sm font-medium">My chats</div>
+          <div className="border-b p-3 text-sm font-medium">Мои чаты</div>
           <div className="max-h-[520px] overflow-y-auto">
-            {loading && <p className="p-3 text-sm text-slate-600">Loading...</p>}
-            {!loading && chats.length === 0 && <p className="p-3 text-sm text-slate-600">No chats yet.</p>}
+            {loading && <p className="p-3 text-sm text-slate-600">Загрузка...</p>}
+            {!loading && chats.length === 0 && <p className="p-3 text-sm text-slate-600">Пока нет чатов.</p>}
             {chats.map((chat) => (
               <button
                 key={chat.id}
@@ -123,7 +123,7 @@ export function ChatPage() {
                 className={`w-full border-b p-3 text-left hover:bg-slate-50 ${selectedChat?.id === chat.id ? 'bg-slate-100' : ''}`}
               >
                 <p className="text-sm font-medium">{chat.otherPartyEmail ?? chat.recruiterEmail ?? chat.applicantEmail}</p>
-                <p className="text-xs text-slate-600">Response #{chat.responseId}</p>
+                <p className="text-xs text-slate-600">Заявка #{chat.responseId}</p>
               </button>
             ))}
           </div>
@@ -151,7 +151,7 @@ export function ChatPage() {
               className="flex-1 rounded border p-2"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Type a message..."
+              placeholder="Введите сообщение..."
               disabled={!selectedChat}
             />
             <button
@@ -160,7 +160,7 @@ export function ChatPage() {
               disabled={!selectedChat || !text.trim()}
               className="rounded bg-slate-900 px-3 py-2 text-white disabled:opacity-50"
             >
-              Send
+              Отправить
             </button>
           </div>
         </div>

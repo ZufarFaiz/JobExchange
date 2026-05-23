@@ -23,4 +23,7 @@ public interface ResponseRepository extends JpaRepository<Response, Long> {
     long countByApplicantId(Long applicantId);
 
     Page<Response> findAllByVacancy(Vacancy vacancy,Pageable pageable);
+
+    @Query("SELECT r FROM Response r WHERE r.vacancy.recruiter.id = :recruiterId")
+    Page<Response> findAllByRecruiterId(@Param("recruiterId") Long recruiterId, Pageable pageable);
 }

@@ -15,8 +15,8 @@ export const RecruiterPresenter = {
   createVacancy(payload: VacancyCreateRequest) {
     return recruiterApi.createVacancy(payload)
   },
-  getResponses(vacancyId: number, page?: number, size?: number) {
-    return recruiterApi.getResponsesByVacancy(vacancyId, page, size)
+  getResponses(page?: number, size?: number) {
+    return recruiterApi.getResponses(page, size)
   },
   updateResponseStatus(responseId: number, payload: ResponseStatusUpdateRequest) {
     return recruiterApi.updateResponseStatus(responseId, payload)

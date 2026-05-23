@@ -57,6 +57,7 @@ export interface VacancyDto extends ShortVacancyDto {
   companyLocation: string
   recruiterName: string
   recruiterEmail: string
+  comments?: CommentDto[]
 }
 
 export interface ApplicantProfileDto {
@@ -163,6 +164,15 @@ export interface RecruiterDto {
   isVerified: boolean
 }
 
+export interface CompanyDto {
+  id: number
+  title: string
+  description: string
+  taxId: string
+  location: string
+  isVerified: boolean
+}
+
 export interface ChatMessageDto {
   id: number
   content: string
@@ -190,4 +200,26 @@ export interface CreateChatRequest {
   responseId: number
   applicantEmail: string
   recruiterEmail: string
+}
+
+export interface CommentCreateRequest {
+  content: string
+  rating: number
+  vacancyId: number
+}
+
+export interface CommentDto {
+  id: number
+  content: string
+  rating: number
+  isVerified: boolean
+  isEdited: boolean
+  createdAt: string
+  updatedAt: string
+  applicantId: number
+  applicantName: string
+  applicantEmail: string
+  vacancyId: number
+  vacancyTitle: string
+  companyName: string
 }

@@ -40,11 +40,10 @@ public class RecruiterController {
         return ResponseEntity.ok(responseService.updateStatus(responseId,request,recruiter.getId()));
     }
 
-    @GetMapping("/vacancies/{vacancyId}/responses")
+    @GetMapping("/responses")
     public ResponseEntity<Page<ShortResponseDto>> getAllResponses(@AuthenticationPrincipal Recruiter recruiter,
-                                                                  @PathVariable Long vacancyId,
                                                                   @PageableDefault(size = 10)Pageable pageable){
-        return ResponseEntity.ok(responseService.getAllResponses(recruiter.getId(),vacancyId,pageable));
+        return ResponseEntity.ok(responseService.getAllResponsesByRecruiter(recruiter.getId(),pageable));
     }
 
     @GetMapping("/responses/{responseId}")

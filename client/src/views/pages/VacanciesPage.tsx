@@ -7,6 +7,26 @@ import { Loader } from '../components/Loader'
 import { getErrorMessage } from '../../utils/app'
 
 export function VacanciesPage() {
+  const experienceLevelLabels = {
+    NO_EXPERIENCE: 'Без опыта',
+    JUNIOR: 'Начинающий специалист',
+    MIDDLE: 'Специалист',
+    SENIOR: 'Ведущий специалист',
+  }
+
+  const employmentTypeLabels = {
+    FULL_TIME: 'Полная занятость',
+    PART_TIME: 'Частичная занятость',
+    PROJECT: 'Проектная работа',
+    INTERNSHIP: 'Стажировка',
+  }
+
+  const workFormatLabels = {
+    OFFICE: 'Офис',
+    REMOTE: 'Удаленная работа',
+    HYBRID: 'Гибрид',
+  }
+
   const [items, setItems] = useState<ShortVacancyDto[]>([])
   const [page, setPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
@@ -55,24 +75,24 @@ export function VacanciesPage() {
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="text-center">
           <h1 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-4xl font-bold text-transparent">
-            Discover Your Dream Job
+            Найдите работу мечты
           </h1>
           <p className="mt-2 text-lg text-slate-600">
-            Explore exciting opportunities and apply with ease.
+            Исследуйте захватывающие возможности и подавайте заявки с легкостью.
           </p>
         </div>
 
         {/* Filters */}
         <div className="rounded-2xl border border-indigo-200 bg-white/80 p-6 shadow-xl backdrop-blur-sm">
           <h2 className="mb-4 flex items-center text-xl font-semibold text-indigo-800">
-            <span className="mr-2 text-2xl">🔍</span> Filter Vacancies
+            <span className="mr-2 text-2xl">🔍</span> Фильтровать вакансии
           </h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">📝</span>
               <input
                 type="text"
-                placeholder="Job Title"
+                placeholder="Название должности"
                 value={filters.title || ''}
                 onChange={(e) => updateFilter('title', e.target.value)}
                 className="w-full rounded-lg border border-slate-300 bg-white py-3 pl-10 pr-4 shadow-sm transition-all duration-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
@@ -82,7 +102,7 @@ export function VacanciesPage() {
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">📍</span>
               <input
                 type="text"
-                placeholder="Location"
+                placeholder="Местоположение"
                 value={filters.location || ''}
                 onChange={(e) => updateFilter('location', e.target.value)}
                 className="w-full rounded-lg border border-slate-300 bg-white py-3 pl-10 pr-4 shadow-sm transition-all duration-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
@@ -92,7 +112,7 @@ export function VacanciesPage() {
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">💰</span>
               <input
                 type="number"
-                placeholder="Min Salary"
+                placeholder="Мин. зарплата (₽)"
                 value={filters.salaryMin || ''}
                 onChange={(e) => updateFilter('salaryMin', e.target.value ? Number(e.target.value) : undefined)}
                 className="w-full rounded-lg border border-slate-300 bg-white py-3 pl-10 pr-4 shadow-sm transition-all duration-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
@@ -102,7 +122,7 @@ export function VacanciesPage() {
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">💰</span>
               <input
                 type="number"
-                placeholder="Max Salary"
+                placeholder="Макс. зарплата (₽)"
                 value={filters.salaryMax || ''}
                 onChange={(e) => updateFilter('salaryMax', e.target.value ? Number(e.target.value) : undefined)}
                 className="w-full rounded-lg border border-slate-300 bg-white py-3 pl-10 pr-4 shadow-sm transition-all duration-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
@@ -113,32 +133,32 @@ export function VacanciesPage() {
               onChange={(e) => updateFilter('employmentType', e.target.value || undefined)}
               className="w-full rounded-lg border border-slate-300 bg-white py-3 px-4 shadow-sm transition-all duration-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
             >
-              <option value="">Employment Type</option>
-              <option value="FULL_TIME">Full Time</option>
-              <option value="PART_TIME">Part Time</option>
-              <option value="PROJECT">Project</option>
-              <option value="INTERNSHIP">Internship</option>
+              <option value="">Тип занятости</option>
+              <option value="FULL_TIME">Полная занятость</option>
+              <option value="PART_TIME">Частичная занятость</option>
+              <option value="PROJECT">Проект</option>
+              <option value="INTERNSHIP">Стажировка</option>
             </select>
             <select
               value={filters.workFormat || ''}
               onChange={(e) => updateFilter('workFormat', e.target.value || undefined)}
               className="w-full rounded-lg border border-slate-300 bg-white py-3 px-4 shadow-sm transition-all duration-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
             >
-              <option value="">Work Format</option>
-              <option value="OFFICE">Office</option>
-              <option value="REMOTE">Remote</option>
-              <option value="HYBRID">Hybrid</option>
+              <option value="">Формат работы</option>
+              <option value="OFFICE">Офис</option>
+              <option value="REMOTE">Удаленно</option>
+              <option value="HYBRID">Гибрид</option>
             </select>
             <select
               value={filters.experienceLevel || ''}
               onChange={(e) => updateFilter('experienceLevel', e.target.value || undefined)}
               className="w-full rounded-lg border border-slate-300 bg-white py-3 px-4 shadow-sm transition-all duration-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
             >
-              <option value="">Experience Level</option>
-              <option value="NO_EXPERIENCE">No Experience</option>
-              <option value="JUNIOR">Junior</option>
-              <option value="MIDDLE">Middle</option>
-              <option value="SENIOR">Senior</option>
+              <option value="">Уровень опыта</option>
+              <option value="NO_EXPERIENCE">Без опыта</option>
+              <option value="JUNIOR">Начинающий специалист</option>
+              <option value="MIDDLE">Специалист</option>
+              <option value="SENIOR">Ведущий специалист</option>
             </select>
           </div>
           <div className="mt-6 flex gap-3">
@@ -147,14 +167,14 @@ export function VacanciesPage() {
               onClick={handleApplyFilters}
               className="rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-3 font-medium text-white shadow-lg transition-all duration-300 hover:from-blue-600 hover:to-indigo-700 hover:shadow-xl"
             >
-              Apply Filters
+              Применить фильтры
             </button>
             <button
               type="button"
               onClick={handleClearFilters}
               className="rounded-lg bg-gradient-to-r from-gray-500 to-slate-600 px-6 py-3 font-medium text-white shadow-lg transition-all duration-300 hover:from-gray-600 hover:to-slate-700 hover:shadow-xl"
             >
-              Clear Filters
+              Очистить фильтры
             </button>
           </div>
         </div>
@@ -183,18 +203,18 @@ export function VacanciesPage() {
                       📍 {vacancy.location}
                     </span>
                     <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                      {vacancy.employmentType}
+                      {employmentTypeLabels[vacancy.employmentType as keyof typeof employmentTypeLabels] || vacancy.employmentType}
                     </span>
                     <span className="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
-                      {vacancy.workFormat}
+                      {workFormatLabels[vacancy.workFormat as keyof typeof workFormatLabels] || vacancy.workFormat}
                     </span>
                     <span className="inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-800">
-                      {vacancy.experienceLevel}
+                      {experienceLevelLabels[vacancy.experienceLevel as keyof typeof experienceLevelLabels] || vacancy.experienceLevel}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <p className="text-lg font-semibold text-indigo-600">
-                      ${vacancy.salaryMin} - ${vacancy.salaryMax}
+                      ₽{vacancy.salaryMin} - ₽{vacancy.salaryMax}
                     </p>
                     <span className="text-indigo-500 transition-transform group-hover:translate-x-1">→</span>
                   </div>
@@ -208,10 +228,10 @@ export function VacanciesPage() {
                 disabled={page <= 0}
                 onClick={() => setPage((prev) => prev - 1)}
               >
-                ← Previous
+                ← Предыдущая
               </button>
               <span className="rounded-lg bg-white px-4 py-2 font-medium text-slate-700 shadow-md">
-                Page {page + 1} of {Math.max(totalPages, 1)}
+                Страница {page + 1} из {Math.max(totalPages, 1)}
               </span>
               <button
                 type="button"
@@ -219,7 +239,7 @@ export function VacanciesPage() {
                 disabled={totalPages > 0 && page >= totalPages - 1}
                 onClick={() => setPage((prev) => prev + 1)}
               >
-                Next →
+                Следующая →
               </button>
             </div>
           </div>

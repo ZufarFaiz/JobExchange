@@ -70,6 +70,11 @@ public class ApplicantController {
         return ResponseEntity.ok(applicantService.storeResume(file,applicant.getId()));
     }
 
+    @GetMapping("/resume")
+    public ResponseEntity<?> viewResume(@AuthenticationPrincipal Applicant applicant){
+         return applicantService.getResume(applicant.getId());
+    }
+
     @DeleteMapping("/resume")
     public ResponseEntity<ApplicantProfileDto> deleteResume(@AuthenticationPrincipal Applicant applicant){
         return ResponseEntity.ok(applicantService.deleteResume(applicant.getId()));

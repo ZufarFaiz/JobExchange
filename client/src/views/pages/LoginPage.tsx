@@ -22,7 +22,7 @@ export function LoginPage() {
       setUser(user)
       navigate(user?.role ? getRoleHomePath(user.role) : '/vacancies')
     } catch (error) {
-      setError(getErrorMessage(error, 'Failed to login. Check credentials.'))
+      setError(getErrorMessage(error, 'Не удалось войти. Проверьте учетные данные.'))
     } finally {
       setLoading(false)
     }
@@ -33,9 +33,9 @@ export function LoginPage() {
       <section className="w-full max-w-md space-y-6 rounded-2xl border border-indigo-200 bg-white/90 p-8 shadow-2xl backdrop-blur-sm">
         <div className="text-center">
           <h1 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-3xl font-bold text-transparent">
-            Welcome Back
+            Добро пожаловать обратно
           </h1>
-          <p className="mt-2 text-slate-600">Sign in to your account</p>
+          <p className="mt-2 text-slate-600">Войдите в свой аккаунт</p>
         </div>
         {error && <ErrorBanner message={error} />}
         <form className="space-y-4" onSubmit={onSubmit}>
@@ -52,7 +52,7 @@ export function LoginPage() {
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔒</span>
             <input
               className="w-full rounded-lg border border-slate-300 bg-white py-3 pl-10 pr-4 shadow-sm transition-all duration-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-              placeholder="Password"
+              placeholder="Пароль"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -63,11 +63,11 @@ export function LoginPage() {
             className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 py-3 font-medium text-white shadow-lg transition-all duration-300 hover:from-blue-600 hover:to-indigo-700 hover:shadow-xl disabled:opacity-50"
             type="submit"
           >
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? 'Вход...' : 'Войти'}
           </button>
         </form>
         <p className="text-center text-sm text-slate-600">
-          Don't have an account? <a href="/register" className="text-indigo-600 hover:underline">Sign up</a>
+          Нет аккаунта? <a href="/register" className="text-indigo-600 hover:underline">Зарегистрироваться</a>
         </p>
       </section>
     </div>

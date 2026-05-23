@@ -39,6 +39,17 @@ public class ChatService {
         chat = chatRepository.save(chat);
         log.info("Chat created: id={}, responseId={}", chat.getId(), chat.getResponseId());
 
+        if (request.getFirstMessage() != null && !request.getFirstMessage().isEmpty()) {
+            Message message = Message.builder()
+                    .chat(chat)
+                    .content(request.getFirstMessage())
+                    .senderEmail(request.getApplicantEmail())
+                    .isRead(false)
+                    .build();
+            messageRepository.save(message);
+            log.info("First message sent to chat: {}", chat.getId());
+        }
+
         return toDto(chat);
     }
 

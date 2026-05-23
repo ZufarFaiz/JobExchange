@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { RecruiterPresenter } from '../../presenters/RecruiterPresenter'
 import type { ShortResponseDto } from '../../types/api'
@@ -6,48 +6,45 @@ import { ErrorBanner } from '../components/ErrorBanner'
 import { getErrorMessage } from '../../utils/app'
 
 export function RecruiterResponsesPage() {
-  const [vacancyId, setVacancyId] = useState('')
   const [items, setItems] = useState<ShortResponseDto[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const onLoad = async () => {
+  const loadResponses = async () => {
     setError(null)
     setLoading(true)
     try {
-      const page = await RecruiterPresenter.getResponses(Number(vacancyId))
+      const page = await RecruiterPresenter.getResponses()
       setItems(page.content)
     } catch (loadError) {
-      setError(getErrorMessage(loadError, 'Failed to load responses'))
+      setError(getErrorMessage(loadError, 'Не удалось загрузить отклики'))
     } finally {
       setLoading(false)
     }
   }
 
+  useEffect(() => {
+    void loadResponses()
+  }, [])
+
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Responses by Vacancy</h1>
+        <h1 className="text-2xl font-semibold">Отклики</h1>
         <Link to="/recruiter" className="text-sm text-slate-600 hover:text-slate-900">
-          Back to profile
+          Назад в профиль
         </Link>
       </div>
       {error && <ErrorBanner message={error} />}
       <div className="rounded border bg-white p-4 space-y-3">
         <div className="flex flex-wrap gap-2">
-          <input
-            className="rounded border p-2"
-            placeholder="Vacancy ID"
-            value={vacancyId}
-            onChange={(e) => setVacancyId(e.target.value)}
-          />
           <button
             className="rounded bg-slate-900 px-3 py-2 text-white disabled:opacity-50"
             type="button"
-            onClick={onLoad}
-            disabled={loading || !vacancyId}
+            onClick={loadResponses}
+            disabled={loading}
           >
-            {loading ? 'Loading...' : 'Load responses'}
+            {loading ? 'Загрузка...' : 'Обновить список откликов'}
           </button>
         </div>
         <div className="overflow-x-auto">
@@ -55,10 +52,10 @@ export function RecruiterResponsesPage() {
             <thead className="bg-slate-100">
               <tr>
                 <th className="p-2">ID</th>
-                <th className="p-2">Applicant</th>
-                <th className="p-2">Vacancy</th>
-                <th className="p-2">Status</th>
-                <th className="p-2">Created</th>
+                <th className="p-2">Кандидат</th>
+                <th className="p-2">Вакансия</th>
+                <th className="p-2">Статус</th>
+                <th className="p-2">Дата</th>
                 <th className="p-2"></th>
               </tr>
             </thead>
@@ -75,7 +72,7 @@ export function RecruiterResponsesPage() {
                       to={`/recruiter/responses/${response.id}`}
                       className="text-blue-600 hover:underline"
                     >
-                      Open
+                      Открыть
                     </Link>
                   </td>
                 </tr>
@@ -83,7 +80,7 @@ export function RecruiterResponsesPage() {
               {!loading && items.length === 0 && (
                 <tr>
                   <td className="p-3 text-slate-500" colSpan={6}>
-                    Enter vacancy ID and load responses.
+                    Нет откликов. Нажмите «Обновить список откликов», чтобы попробовать снова.
                   </td>
                 </tr>
               )}

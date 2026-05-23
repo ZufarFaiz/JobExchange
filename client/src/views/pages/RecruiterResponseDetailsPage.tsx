@@ -103,9 +103,9 @@ export function RecruiterResponseDetailsPage() {
   return (
     <section className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Response Details</h1>
+        <h1 className="text-2xl font-semibold">Детали отклика</h1>
         <Link to="/recruiter/responses" className="text-sm text-slate-600 hover:text-slate-900">
-          Back to responses
+          Назад к откликам
         </Link>
       </div>
       {loading && <Loader />}
@@ -114,23 +114,23 @@ export function RecruiterResponseDetailsPage() {
       {item && (
         <div className="space-y-4 rounded border bg-white p-4">
           <div className="grid gap-2 md:grid-cols-2">
-            <p><span className="font-medium">Response ID:</span> {item.id}</p>
-            <p><span className="font-medium">Status:</span> {item.status}</p>
-            <p><span className="font-medium">Applicant:</span> {item.applicantName}</p>
+            <p><span className="font-medium">ID отклика:</span> {item.id}</p>
+            <p><span className="font-medium">Статус:</span> {item.status}</p>
+            <p><span className="font-medium">Кандидат:</span> {item.applicantName}</p>
             <p><span className="font-medium">Email:</span> {item.applicantEmail}</p>
-            <p><span className="font-medium">Vacancy:</span> {item.vacancyTitle}</p>
-            <p><span className="font-medium">Company:</span> {item.companyTitle}</p>
-            <p><span className="font-medium">Created:</span> {new Date(item.createdAt).toLocaleString()}</p>
+            <p><span className="font-medium">Вакансия:</span> {item.vacancyTitle}</p>
+            <p><span className="font-medium">Компания:</span> {item.companyTitle}</p>
+            <p><span className="font-medium">Создан:</span> {new Date(item.createdAt).toLocaleString()}</p>
             <p>
-              <span className="font-medium">Viewed:</span>{' '}
-              {item.viewedAt ? new Date(item.viewedAt).toLocaleString() : 'Not viewed yet'}
+              <span className="font-medium">Просмотрен:</span>{' '}
+              {item.viewedAt ? new Date(item.viewedAt).toLocaleString() : 'Ещё не просмотрен'}
             </p>
           </div>
 
           <div>
-            <h2 className="mb-2 text-lg font-semibold">Cover Letter</h2>
+            <h2 className="mb-2 text-lg font-semibold">Сопроводительный текст</h2>
             <p className="whitespace-pre-line rounded bg-slate-50 p-3 text-sm">
-              {item.coverLetter || 'No cover letter provided.'}
+              {item.coverLetter || 'Сопроводительное письмо не предоставлено.'}
             </p>
           </div>
 
@@ -143,7 +143,7 @@ export function RecruiterResponseDetailsPage() {
                 onClick={() => onChangeStatus(status)}
                 className="rounded bg-slate-900 px-3 py-2 text-white disabled:opacity-50"
               >
-                Mark as {status}
+                Пометить как {status}
               </button>
             ))}
           </div>
@@ -154,7 +154,7 @@ export function RecruiterResponseDetailsPage() {
               onClick={onOpenChat}
               className="rounded bg-emerald-600 px-3 py-2 text-white hover:bg-emerald-700"
             >
-              Open Chat
+              Открыть чат
             </button>
             <button
               type="button"
@@ -162,7 +162,7 @@ export function RecruiterResponseDetailsPage() {
               disabled={resumeLoading}
               className="rounded bg-indigo-600 px-3 py-2 text-white hover:bg-indigo-700"
             >
-              View Resume
+              Посмотреть резюме
             </button>
             <button
               type="button"
@@ -170,7 +170,7 @@ export function RecruiterResponseDetailsPage() {
               disabled={resumeLoading}
               className="rounded bg-slate-700 px-3 py-2 text-white hover:bg-slate-800"
             >
-              Download Resume
+              Скачать резюме
             </button>
           </div>
         </div>

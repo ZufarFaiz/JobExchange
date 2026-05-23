@@ -3,6 +3,8 @@ import type {
   ApplicantProfileDto,
   ResponseCreateRequest,
   UpdateProfileRequest,
+  CommentCreateRequest,
+  CommentDto,
 } from '../types/api'
 
 export const applicantApi = {
@@ -29,8 +31,22 @@ export const applicantApi = {
     )
     return data
   },
+  async viewResume() {
+    const response = await http.get('/api/applicant/resume', {
+      responseType: 'blob',
+    })
+    return response.data
+  },
+  async deleteResume() {
+    const { data } = await http.delete<ApplicantProfileDto>('/api/applicant/resume')
+    return data
+  },
   async createResponse(payload: ResponseCreateRequest) {
     const { data } = await http.post('/api/applicant/responses', payload)
+    return data
+  },
+  async createComment(payload: CommentCreateRequest) {
+    const { data } = await http.post<CommentDto>('/api/applicant/comments', payload)
     return data
   },
 }
